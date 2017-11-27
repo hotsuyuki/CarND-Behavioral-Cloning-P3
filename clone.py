@@ -11,20 +11,30 @@ with open('./driving_log.csv') as csvfile:
 images = []
 measurements = []
 for line in lines:
-    # picture of the center camera
-    source_path = line[0]
-    filename = source_path.split('/')[-1]
-    current_path = './IMG/' + filename
-    # read the images
-    image = cv2.imread(current_path)
-    images.append(image)
-    measurement = float(line[3])
-    measurements.append(measurement)
-    # flip the images
-    image_flipped = np.fliplr(image)
-    images.append(image_flipped)
-    measurement_flipped = -measurement
-    measurements.append(measurement_flipped)
+    # 0:center, 1:left, 2:right
+    for direction in range(3):
+        # directory of the picture 
+        source_path = line[direction]
+        filename = source_path.split('/')[-1]
+        current_path = './IMG/' + filename
+
+        # read the images
+        image = cv2.imread(current_path)
+        images.append(image)
+        correction = 0.1
+        if (direction == 0): # center
+            measurement = float(line[3])
+        elif (direction == 1): # left
+            measurement = float(line[3])-correction
+        elif (direction == 2): # right
+            measurement = float(line[3])+correction
+        measurements.append(measurement)
+
+        # flip the images
+        image_flipped = np.fliplr(image)
+        images.append(image_flipped)
+        measurement_flipped = -measurement
+        measurements.append(measurement_flipped)
 
 X_train = np.array(images)
 y_train = np.array(measurements)
@@ -49,18 +59,3 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
 
 model.save('model.h5')
 
-model.add(Flatten())
-model.add(Dense(1))
-
-model.compile(loss='mse', optimizer='adam')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
-
-model.save('model.h5')
-
-model.add(Flatten())
-model.add(Dense(1))
-
-model.compile(loss='mse', optimizer='adam')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
-
-model.save('model.h5')
