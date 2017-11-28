@@ -30,7 +30,9 @@ def generator(samples, batch_size):
                     # read the image
                     name = './data/IMG/'+batch_sample[direction].split('/')[-1]
                     #name = './IMG/'+batch_sample[direction].split('/')[-1]
-                    image = cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB)
+                    image = cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB) # 160*320*3
+                    image = image[70:140,10:310,:] # 70*300*3
+                    image = cv2.resize(image, (WIDTH, HEIGHT)) # 68*204*3
                     images.append(image)
                     
                     # read the angle
@@ -54,23 +56,20 @@ def generator(samples, batch_size):
             yield shuffle(X_train, y_train)
 
 # compile and train the model using the generator function
+HEIGHT = 68
+WIDTH = 204
 BATCH_SIZE = 64
 train_generator = generator(train_samples, batch_size=BATCH_SIZE)
 validation_generator = generator(validation_samples, batch_size=BATCH_SIZE)
 
 
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda, Cropping2D, Dropout
+from keras.layers import Flatten, Dense, Lambda, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
-#from keras.backend import tf
-import tensorflow as tf
 
 model = Sequential()
-model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3))) # 160*320*3
-model.add(Cropping2D(cropping=((70,20), (10,10)))) # 70*300*3
-#model.add(Lambda(lambda x: tf.image.resize_images(x, (68, 204)))) # 68*204*3
-model.add(Lambda(lambda x: tf.image.resize_images(x, (68, 204)))) # 68*204*3
+model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(HEIGHT,WIDTH,3))) # 3@68*204
 model.add(Convolution2D(24,5,5, border_mode = 'valid', activation="elu")) # 24@64*200
 model.add(MaxPooling2D(pool_size=(2,2))) # 24@32*100
 model.add(Convolution2D(36,5,5, border_mode = 'valid', activation="elu")) # 36@28*96
