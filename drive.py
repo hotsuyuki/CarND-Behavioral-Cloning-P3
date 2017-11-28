@@ -16,7 +16,7 @@ from keras.models import load_model
 import h5py
 from keras import __version__ as keras_version
 
-from keras.backend import tf as ktf
+#from keras.backend import tf as ktf
 
 
 sio = socketio.Server()
