@@ -63,12 +63,12 @@ from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
-from keras.backend import tf as ktf
+from keras.backend import tf
 
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3))) # 160*320*3
 model.add(Cropping2D(cropping=((70,20), (10,10)))) # 70*300*3
-model.add(Lambda(lambda x: ktf.image.resize_images(x, (68, 204)))) # 68*204*3
+model.add(Lambda(lambda x: tf.image.resize_images(x, (68, 204)))) # 68*204*3
 model.add(Convolution2D(24,5,5, border_mode = 'valid', activation="elu")) # 24@64*200
 model.add(MaxPooling2D(pool_size=(2,2))) # 24@32*100
 model.add(Convolution2D(36,5,5, border_mode = 'valid', activation="elu")) # 36@28*96
