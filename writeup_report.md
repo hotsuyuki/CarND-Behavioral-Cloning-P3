@@ -43,12 +43,12 @@ First, read images and steering angles, which are the dataset provided from Udac
 Then converted the color space from BGR into RGB for `drive.py`, cropped top 55[pixel] and bottom 20[pixel] (i.e. 160x320x3 ---> 85x320x3), and resized to 68x204 (i.e. 85x320x3 ---> 68x204x3) in order to feed to the NVIDIA's CNN architecture <`model.py` line:27-33>.
 
 <div style="text-align:center">
-<img src="./writeup_images/85x320x3.png">
+<img src="./writeup_images/85x320x3.png"><br/>
 85x320x3
 </div><br/>
 
 <div style="text-align:center">
-<img src="./writeup_images/68x204x3.png">
+<img src="./writeup_images/68x204x3.png"><br/>
 68x204x3
 </div><br/>
 
@@ -65,7 +65,7 @@ Then flipped the dataset horizontally if the magnitude of the steering angle is 
 After augmentation, the number of train data resulted up to 41491 (the number of validation data is 1608), however the CNN model didn't work well with this dataset. So I visualized the distribution of this dataset.
 
 <div style="text-align:center">
-<img src="./writeup_images/distribution_before_flattening.png">
+<img src="./writeup_images/distribution_before_flattening.png"><br/>
 The distribution of the train data **before** flattening
 </div><br/>
 
@@ -73,7 +73,7 @@ The above figure indicates the number of data around 0.0 is extremely high while
 This extreme deviation would cause inappropriate behavior through the CNN, therefor I flattening the distribution by deleting data ramdomly if the number of the data in one bin is over the average number of samples per bin, which is 1659 <`model.py` line:123-130>. This idea is come from [jeremy-shannon's github repository](https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project/blob/master/README.md).
 
 <div style="text-align:center">
-<img src="./writeup_images/distribution_after_flattening.png">
+<img src="./writeup_images/distribution_after_flattening.png"><br/>
 The distribution of the train data **after** flattening
 </div><br/>
 
@@ -84,7 +84,7 @@ After flattening, the distribution of train data resulted as avobe. The deviatio
 I used the NVIDIA's CNN model introduced in the Udacity lesson.
 
 <div style="text-align:center">
-<img src="./writeup_images/nvidia_cnn_model.png">
+<img src="./writeup_images/nvidia_cnn_model.png"><br/>
 The NVIDIA's CNN model architecture
 </div><br/>
 
