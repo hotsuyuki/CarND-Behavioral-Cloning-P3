@@ -39,8 +39,8 @@ The `model.py` file contains the code for training and saving the convolution ne
 
 #### 1. Read and preprocess the data
 
-First, read images and steering angles, which are the dataset provided from Udacity, from the csv file <`model.py` line:10~26>.
-Then converted the color space from BGR into RGB for `drive.py`, cropped top 55[pixel] and bottom 20[pixel] (i.e. 160x320x3 ---> 85x320x3), and resized to 68x204 (i.e. 85x320x3 ---> 68x204x3) in order to feed to the NVIDIA's CNN architecture <`model.py` line:27~33>.
+First, read images and steering angles, which are the dataset provided from Udacity, from the csv file <`model.py` line:10-26>.
+Then converted the color space from BGR into RGB for `drive.py`, cropped top 55[pixel] and bottom 20[pixel] (i.e. 160x320x3 ---> 85x320x3), and resized to 68x204 (i.e. 85x320x3 ---> 68x204x3) in order to feed to the NVIDIA's CNN architecture <`model.py` line:27-33>.
 
 <div style="text-align:center">
 <img src="./writeup_images/85x320x3.png">
@@ -52,13 +52,13 @@ Then converted the color space from BGR into RGB for `drive.py`, cropped top 55[
 68x204x3
 </div><br/>
 
-This preprocessing is also implemented in `drive.py` <`drive.py` line:68~69>.
+This preprocessing is also implemented in `drive.py` <`drive.py` line:68-69>.
 After preprocessing, I split the images and the steering steering angles from the center camera into train dataset (80%) and validation dataset (20%) <`model.py` line:40>.
 
 #### 2. Data augmentation
 
-I added images from the left camera (adjusted the steering angle by +0.1) and the right camera (adjusted the steering angle by -0.1) into images captured by the center camera <`model.py` line:63~81>.
-Then flipped the dataset horizontally if the magnitude of the steering angle is grater than 0.001 <`model.py` line:98~106>. It prevents from flipping images that the angle is 0.
+I added images from the left camera (adjusted the steering angle by +0.1) and the right camera (adjusted the steering angle by -0.1) into images captured by the center camera <`model.py` line:63-81>.
+Then flipped the dataset horizontally if the magnitude of the steering angle is grater than 0.001 <`model.py` line:98-106>. It prevents from flipping images that the angle is 0.
 
 #### 3. Flattening the distribution of dataset
 
@@ -70,7 +70,7 @@ The distribution of the train data **before** flattening
 </div><br/>
 
 The above figure indicates the number of data around 0.0 is extremely high while the average number of data per bin is 1659. The reason why the center bin (wich means -0.044~+0.044) is lower than both sides (wich means -0.132~-0.044 and +0.044~+0.132) is only flipping the images that the steering angle is grater than 0.001 <`model.py` line:101>.
-This extreme deviation would cause inappropriate behavior through the CNN, therefor I flattening the distribution by deleting data ramdomly if the number of the data in one bin is over the average number of samples per bin, which is 1659 <`model.py` line:123~130>. This idea is come from [jeremy-shannon's github repository](https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project/blob/master/README.md).
+This extreme deviation would cause inappropriate behavior through the CNN, therefor I flattening the distribution by deleting data ramdomly if the number of the data in one bin is over the average number of samples per bin, which is 1659 <`model.py` line:123-130>. This idea is come from [jeremy-shannon's github repository](https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project/blob/master/README.md).
 
 <div style="text-align:center">
 <img src="./writeup_images/distribution_after_flattening.png">
@@ -88,8 +88,8 @@ I used the NVIDIA's CNN model introduced in the Udacity lesson.
 The NVIDIA's CNN model architecture
 </div><br/>
 
-To prevent overfitting, L2 regularization is added in each layer except last output layer. I used 0.0001 for learning rate of Adam optimizer while the default was 0.001 <`model.py` line:161~180>.
+To prevent overfitting, L2 regularization is added in each layer except last output layer. I used 0.0001 for learning rate of Adam optimizer while the default was 0.001 <`model.py` line:161-180>.
 
 #### 5. Train the model
 
-Using generator to feed batch size of sample and `model.save_wights()` to save the training result every epoch, I traind the model 20 epochs and found out that **4** epochs is enough to complete running Track No.1 safely <`model.py` line:190~202>.
+Using generator to feed batch size of sample and `model.save_wights()` to save the training result every epoch, I traind the model 20 epochs and found out that **4** epochs is enough to complete running Track No.1 safely <`model.py` line:190-202>.
